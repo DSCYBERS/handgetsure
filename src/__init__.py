@@ -7,21 +7,17 @@ __version__ = "1.0.0"
 __author__ = "Hand Gesture Control Team"
 __description__ = "Dynamic Gesture-Based Live System Control Using Google MediaPipe"
 
+# Import core modules that don't require display
 from .camera import CameraManager
 from .hand_detector import HandDetector, HandData
 from .gesture_recognizer import GestureRecognizer, GestureResult, GestureType
 from .config import ConfigManager
 
-# Conditional imports for display-dependent modules
-try:
-    from .command_mapper import CommandMapper
-    from .visualizer import Visualizer
-    _DISPLAY_MODULES_AVAILABLE = True
-except ImportError as e:
-    # Create placeholder classes for headless environments
-    CommandMapper = None
-    Visualizer = None
-    _DISPLAY_MODULES_AVAILABLE = False
+# Display-dependent modules - import only when explicitly requested
+# These are not imported automatically to avoid display environment issues
+# Import them manually in your code when display is available:
+# from src.command_mapper import CommandMapper
+# from src.visualizer import Visualizer
 
 __all__ = [
     'CameraManager',
@@ -33,6 +29,21 @@ __all__ = [
     'ConfigManager'
 ]
 
-# Only add display modules to __all__ if they're available
-if _DISPLAY_MODULES_AVAILABLE:
-    __all__.extend(['CommandMapper', 'Visualizer'])
+# Helper function to check display availability
+def is_display_available():
+    """Check if display environment is available for GUI modules."""
+    import os
+    return 'DISPLAY' in os.environ or os.name == 'nt'
+
+# Helper function to safely import display modules
+def import_display_modules():
+    """Safely import display-dependent modules if available."""
+    try:
+        if is_display_available():
+            from .command_mapper import CommandMapper
+            from .visualizer import Visualizer
+            return CommandMapper, Visualizer
+        else:
+            return None, None
+    except ImportError:
+        return None, None

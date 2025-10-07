@@ -13,33 +13,44 @@ from typing import List, Optional
 import logging
 import os
 
-# Import project modules with error handling
+# Configure logging first
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+# Import core modules that don't require display
 try:
+    # Import core modules directly to avoid __init__.py issues
+    sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+    
     from src.camera import CameraManager
     from src.hand_detector import HandDetector, HandData
     from src.gesture_recognizer import GestureRecognizer, GestureResult, GestureType
     from src.config import ConfigManager
     
-    # Import display-dependent modules conditionally
-    try:
-        from src.command_mapper import CommandMapper
-        from src.visualizer import Visualizer
-        DISPLAY_AVAILABLE = True
-    except ImportError as e:
-        print(f"⚠️  Display modules not available: {e}")
-        print("   Running in headless mode - visualization and system commands disabled")
-        CommandMapper = None
-        Visualizer = None
-        DISPLAY_AVAILABLE = False
+    logger.info("Core modules imported successfully")
+    
+    # Try to import display-dependent modules
+    DISPLAY_AVAILABLE = False
+    CommandMapper = None
+    Visualizer = None
+    
+    # Check if display is available
+    if 'DISPLAY' in os.environ or os.name == 'nt':  # Windows doesn't need DISPLAY
+        try:
+            from src.command_mapper import CommandMapper
+            from src.visualizer import Visualizer
+            DISPLAY_AVAILABLE = True
+            logger.info("Display modules imported successfully - full GUI mode available")
+        except Exception as e:
+            logger.warning(f"Display modules not available: {e}")
+            logger.info("Running in headless mode - core functionality only")
+    else:
+        logger.info("No display environment detected - running in headless mode")
         
 except ImportError as e:
-    print(f"❌ Failed to import core modules: {e}")
-    print("   Please install required dependencies: pip install -r requirements.txt")
+    logger.error(f"Failed to import required modules: {e}")
+    print("❌ Error: Missing required dependencies. Please run: pip install -r requirements.txt")
     sys.exit(1)
-
-# Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
 
 
 class HandGestureControlSystem:

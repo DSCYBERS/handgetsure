@@ -1,0 +1,79 @@
+{
+    "volume_control": {
+        "open_palm": {
+            "action": "volume_up",
+            "description": "Increase volume",
+            "enabled": true
+        },
+        "fist": {
+            "action": "volume_down",
+            "description": "Decrease volume",
+            "enabled": true
+        }
+    },
+    "media_control": {
+        "thumbs_up": {
+            "action": "play_pause",
+            "description": "Play/Pause media",
+            "enabled": true
+        },
+        "swipe_left": {
+            "action": "next_track",
+            "description": "Next track",
+            "enabled": true
+        },
+        "swipe_right": {
+            "action": "previous_track",
+            "description": "Previous track",
+            "enabled": true
+        }
+    },
+    "presentation_control": {
+        "swipe_up": {
+            "action": "next_slide",
+            "description": "Next slide",
+            "enabled": true
+        },
+        "swipe_down": {
+            "action": "previous_slide",
+            "description": "Previous slide",
+            "enabled": true
+        }
+    },
+    "mouse_control": {
+        "index_point": {
+            "action": "mouse_cursor",
+            "description": "Control mouse cursor",
+            "enabled": true
+        },
+        "pinch": {
+            "action": "mouse_click",
+            "description": "Mouse click",
+            "enabled": true
+        }
+    },
+    "browser_control": {
+        "peace_sign": {
+            "action": "scroll_up",
+            "description": "Scroll up",
+            "enabled": true
+        },
+        "rock_sign": {
+            "action": "scroll_down",
+            "description": "Scroll down",
+            "enabled": true
+        }
+    },
+    "system_shortcuts": {
+        "ok_sign": {
+            "action": "screenshot",
+            "description": "Take screenshot",
+            "enabled": true
+        },
+        "stop_sign": {
+            "action": "alt_tab",
+            "description": "Switch windows",
+            "enabled": true
+        }
+    }
+}

@@ -6,6 +6,7 @@
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
 ## Project Type: Real-Time Computer Vision Application
+
 **Duration:** 8-10 Weeks | **Difficulty:** Intermediate-Advanced | **Team Size:** 2-4 members
 
 A real-time gesture recognition and control system that enables touchless interaction with your computer using hand movements captured via webcam. Built with Python, OpenCV, Google MediaPipe, and PyAutoGUI.
@@ -13,6 +14,7 @@ A real-time gesture recognition and control system that enables touchless intera
 ---
 
 ## 📋 Table of Contents
+
 1. [Executive Summary](#executive-summary)
 2. [Problem Statement](#problem-statement)
 3. [Objectives](#objectives)
@@ -44,21 +46,25 @@ This project develops a **real-time, touchless human-computer interface** that i
 ### Current Challenges
 
 **Physical Contact Dependency**
+
 - Traditional interfaces (mouse, keyboard, touchscreen) require direct physical interaction
 - Unhygienic in public spaces, hospitals, and shared environments
 - Inaccessible for users with mobility impairments
 
 **Limited Interaction Paradigms**
+
 - Conventional input devices restrict natural human expression
 - Steep learning curve for specialized equipment
 - No seamless integration across different applications
 
 **Accessibility Gaps**
+
 - Users with physical disabilities face barriers with standard input devices
 - Assistive technologies are often expensive and application-specific
 - Limited options for touchless control in professional settings
 
 ### Target Problems to Solve
+
 1. Enable hygienic, contactless computer interaction
 2. Provide accessible interface for differently-abled users
 3. Create natural, intuitive control mechanism
@@ -70,6 +76,7 @@ This project develops a **real-time, touchless human-computer interface** that i
 ## 3️⃣ Project Objectives <a name="objectives"></a>
 
 ### Primary Objectives
+
 1. **Develop Real-Time Gesture Recognition System**
    - Achieve <50ms latency from gesture to action
    - Support 15+ distinct gestures
@@ -91,6 +98,7 @@ This project develops a **real-time, touchless human-computer interface** that i
    - Graceful degradation when detection fails
 
 ### Secondary Objectives
+
 - Develop modular architecture for easy extension
 - Create comprehensive documentation
 - Build demo showcases for different use cases
