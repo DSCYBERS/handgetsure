@@ -1,0 +1,67 @@
+{
+  "camera": {
+    "camera_index": 0,
+    "frame_width": 640,
+    "frame_height": 480,
+    "fps": 30,
+    "auto_exposure": true,
+    "brightness": 0.5,
+    "contrast": 0.5
+  },
+  "hand_detection": {
+    "static_image_mode": false,
+    "max_num_hands": 2,
+    "min_detection_confidence": 0.7,
+    "min_tracking_confidence": 0.5,
+    "detection_complexity": 1
+  },
+  "gesture_recognition": {
+    "confidence_threshold": 0.8,
+    "smoothing_frames": 5,
+    "gesture_hold_time": 0.3,
+    "motion_threshold": 0.02,
+    "enabled_gestures": [
+      "open_palm",
+      "fist",
+      "thumbs_up",
+      "thumbs_down",
+      "index_point",
+      "peace_sign",
+      "ok_sign",
+      "stop_sign",
+      "swipe_left",
+      "swipe_right",
+      "pinch",
+      "grab"
+    ]
+  },
+  "commands": {
+    "open_palm": {"type": "pause_system", "enabled": true},
+    "fist": {"type": "resume_system", "enabled": true},
+    "thumbs_up": {"type": "volume_up", "enabled": true},
+    "thumbs_down": {"type": "volume_down", "enabled": true},
+    "index_point": {"type": "mouse_click", "enabled": true},
+    "peace_sign": {"type": "screenshot", "enabled": true},
+    "ok_sign": {"type": "ok_confirmation", "enabled": true},
+    "swipe_left": {"type": "prev_slide", "enabled": true},
+    "swipe_right": {"type": "next_slide", "enabled": true}
+  },
+  "visualization": {
+    "show_landmarks": true,
+    "show_connections": true,
+    "show_gesture_info": true,
+    "show_confidence": true,
+    "show_fps": true,
+    "window_title": "Hand Gesture Control System",
+    "landmark_color": [0, 255, 0],
+    "connection_color": [255, 0, 0],
+    "text_color": [255, 255, 255]
+  },
+  "system": {
+    "enable_logging": true,
+    "log_level": "INFO",
+    "save_recordings": false,
+    "auto_calibrate": true,
+    "performance_mode": false
+  }
+}
