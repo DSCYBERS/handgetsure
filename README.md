@@ -16,6 +16,10 @@
 ✅ **Cross-platform** - Windows, macOS, Linux  
 ✅ **Production ready** - Comprehensive error handling  
 
+## 🚨 **CAMERA REQUIRED**
+
+**⚠️ IMPORTANT: This application requires a working camera to function. The tool will not start without camera access.**
+
 ## Project Type: Real-Time Computer Vision Application
 
 **Duration:** 8-10 Weeks | **Difficulty:** Intermediate-Advanced | **Team Size:** 2-4 members

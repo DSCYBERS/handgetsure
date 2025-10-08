@@ -17,6 +17,40 @@ import os
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+# Add src to path for imports
+sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
+
+def validate_startup_requirements():
+    """Validate requirements before starting the application."""
+    logger.info("🔍 Validating startup requirements...")
+    
+    try:
+        from requirements_manager import validate_critical_requirements_only, get_requirements_manager
+        
+        if not validate_critical_requirements_only():
+            manager = get_requirements_manager()
+            manager.print_validation_errors()
+            manager.print_missing_packages_help()
+            
+            print("\n🚫 STARTUP BLOCKED")
+            print("❌ Critical requirements not satisfied")
+            print("💡 Run the installer: python install.py")
+            print("💡 Or install manually: pip install -r requirements.txt")
+            sys.exit(1)
+        
+        logger.info("✅ Startup requirements satisfied")
+        
+    except ImportError as e:
+        logger.error(f"❌ Requirements manager not available: {e}")
+        print("\n� REQUIREMENTS VALIDATION FAILED")
+        print("❌ Unable to validate requirements")
+        print("� Ensure you're running from the project directory")
+        print("💡 Run: python install.py")
+        sys.exit(1)
+
+# Validate requirements before importing other modules
+validate_startup_requirements()
+
 # Import core modules that don't require display
 try:
     # Import core modules directly to avoid __init__.py issues
@@ -68,6 +102,26 @@ class HandGestureControlSystem:
         # Load configuration
         self.config_manager = ConfigManager(config_dir)
         self.config = self.config_manager.get_config()
+        
+        # MANDATORY CAMERA CHECK - Camera is required for this tool
+        if not self._check_camera_availability():
+            logger.error("❌ CAMERA REQUIRED: This tool requires a working camera to function")
+            print("\n" + "="*60)
+            print("🚫 CAMERA ACCESS REQUIRED")
+            print("="*60)
+            print("❌ This hand gesture tool requires a working camera to operate.")
+            print("📹 Please ensure you have:")
+            print("   • A camera connected to your system")
+            print("   • Camera drivers properly installed")
+            print("   • Camera permissions granted")
+            print("   • No other applications using the camera")
+            print("\n💡 To test your camera:")
+            print("   • On Windows: Open Camera app")
+            print("   • On Linux: Run 'cheese' or 'v4l2-ctl --list-devices'")
+            print("   • On macOS: Open Photo Booth")
+            print("\n🔧 Once your camera is working, restart this application.")
+            print("="*60)
+            sys.exit(1)
         
         # Initialize system state
         self.running = False
@@ -133,13 +187,65 @@ class HandGestureControlSystem:
             logger.error(f"Failed to initialize modules: {e}")
             raise
     
+    def _check_camera_availability(self) -> bool:
+        """
+        Check if camera is available and working.
+        
+        Returns:
+            bool: True if camera is available, False otherwise
+        """
+        logger.info("🔍 Checking camera availability...")
+        
+        # Try to access multiple camera indices (0, 1, 2)
+        for camera_index in range(3):
+            try:
+                logger.info(f"Testing camera index {camera_index}...")
+                cap = cv2.VideoCapture(camera_index)
+                
+                if cap.isOpened():
+                    # Try to read a frame to verify camera is actually working
+                    ret, frame = cap.read()
+                    cap.release()
+                    
+                    if ret and frame is not None:
+                        logger.info(f"✅ Camera {camera_index} is available and working")
+                        # Update config to use this working camera
+                        self.config.camera.camera_index = camera_index
+                        return True
+                    else:
+                        logger.warning(f"⚠️ Camera {camera_index} opened but cannot read frames")
+                else:
+                    logger.warning(f"⚠️ Cannot open camera {camera_index}")
+                    
+                cap.release()
+                
+            except Exception as e:
+                logger.warning(f"⚠️ Error testing camera {camera_index}: {e}")
+                
+        logger.error("❌ No working camera found")
+        return False
+    
     def start(self) -> None:
         """Start the hand gesture control system."""
         logger.info("Starting Hand Gesture Control System...")
         
+        # Double-check camera before starting (additional safety)
+        logger.info("🔍 Performing final camera verification...")
+        if not self._check_camera_availability():
+            logger.error("❌ CRITICAL: Camera became unavailable before starting")
+            print("\n🚫 CAMERA ERROR: Camera was detected during initialization but is no longer available!")
+            print("💡 Please check if another application is using the camera and try again.")
+            return
+        
         # Start camera
         if not self.camera.start_camera():
-            logger.error("Failed to start camera")
+            logger.error("❌ CRITICAL: Failed to start camera - Tool cannot function without camera")
+            print("\n🚫 CAMERA STARTUP FAILED")
+            print("❌ The camera could not be started. This tool requires camera access to function.")
+            print("💡 Please ensure:")
+            print("   • Camera is not being used by another application")
+            print("   • Camera drivers are properly installed")
+            print("   • You have camera permissions")
             return
         
         self.running = True
@@ -442,32 +548,8 @@ def main():
     print("🤚 DYNAMIC GESTURE-BASED LIVE SYSTEM CONTROL 🤚")
     print("Using Google MediaPipe Hand Recognition")
     print("=" * 60)
-    print()
-    
-    try:
-        # Create and start the system
-        system = HandGestureControlSystem()
-        
-        print("Starting system... Press ESC to exit, H for help")
-        print("Make sure your hands are visible to the camera!")
-        print()
-        
-        system.start()
-        
-    except KeyboardInterrupt:
-        print("\nShutdown requested by user")
-    except Exception as e:
-        logger.error(f"System error: {e}")
-        print(f"Error: {e}")
-    finally:
-        print("Thank you for using Hand Gesture Control System!")
-
-
-def main():
-    """Entry point for console script."""
-    print("=" * 60)
-    print("🤚 DYNAMIC GESTURE-BASED LIVE SYSTEM CONTROL 🤚")
-    print("Using Google MediaPipe Hand Recognition")
+    print("⚠️  CAMERA REQUIRED: This tool requires a working camera")
+    print("📹 Ensure your camera is connected and accessible")
     print("=" * 60)
     print()
     
@@ -475,6 +557,7 @@ def main():
         # Create and start the system
         system = HandGestureControlSystem()
         
+        print("🎉 Camera verified successfully!")
         print("Starting system... Press ESC to exit, H for help")
         print("Make sure your hands are visible to the camera!")
         print()
